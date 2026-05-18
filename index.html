@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lamweb — Web Development Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --pink: #C4758A; --pink-light: #F5E8EC; --pink-mid: #DFB0BB; --pink-dark: #A55A6E;
+    --black: #1C1C1C; --white: #FBF7F8; --gray: #7A6B6F; --gray-light: #F2ECED;
+    --serif: 'Playfair Display', Georgia, serif;
+    --sans: 'DM Sans', system-ui, sans-serif;
+    --arabic: 'Tajawal', system-ui, sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--sans); background: var(--white); color: var(--black); overflow-x: hidden; }
+  body.ar { font-family: var(--arabic); direction: rtl; text-align: right; }
+
+  .en { display: block; } .ar-t { display: none; }
+  body.ar .en { display: none; } body.ar .ar-t { display: block; }
+  span.en { display: inline; } span.ar-t { display: none; }
+  body.ar span.en { display: none; } body.ar span.ar-t { display: inline; }
+
+  /* NAV */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 4rem; background: rgba(251,247,248,0.93); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(0,0,0,0.06); }
+  .logo { font-family: var(--serif); font-size: 1.7rem; letter-spacing: 0.01em; text-decoration: none; font-weight: 400; }
+  .logo span.lam { color: var(--black); } .logo span.web { color: var(--pink); font-style: italic; }
+  .nav-right { display: flex; align-items: center; gap: 1.5rem; }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a { text-decoration: none; color: var(--gray); font-size: 0.9rem; font-weight: 400; letter-spacing: 0.02em; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--black); }
+  .nav-cta { background: var(--pink); color: #fff !important; padding: 0.55rem 1.3rem; border-radius: 100px; font-size: 0.85rem !important; font-weight: 500 !important; transition: background 0.2s !important; text-decoration: none; }
+  .nav-cta:hover { background: var(--pink-dark) !important; }
+
+  .lang-toggle { display: flex; align-items: center; background: var(--gray-light); border-radius: 100px; padding: 3px; gap: 2px; border: 1px solid var(--pink-mid); }
+  .lang-btn { padding: 0.3rem 0.8rem; border-radius: 100px; font-size: 0.78rem; font-weight: 500; border: none; background: transparent; color: var(--gray); cursor: pointer; transition: all 0.2s; letter-spacing: 0.04em; }
+  .lang-btn.active { background: var(--pink); color: #fff; }
+
+  /* HERO */
+  #hero { min-height: 100vh; display: flex; align-items: center; padding: 8rem 4rem 4rem; position: relative; overflow: hidden; }
+  .hero-bg-circle { position: absolute; border-radius: 50%; background: var(--pink-light); z-index: 0; }
+  .hero-bg-circle.c1 { width: 500px; height: 500px; top: -100px; right: -120px; opacity: 0.6; }
+  .hero-bg-circle.c2 { width: 250px; height: 250px; bottom: 80px; left: 5%; opacity: 0.35; }
+  body.ar .hero-bg-circle.c1 { right: auto; left: -120px; }
+  body.ar .hero-bg-circle.c2 { left: auto; right: 5%; }
+  .hero-inner { position: relative; z-index: 1; max-width: 780px; }
+  .hero-tag { display: inline-block; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--pink); border: 1px solid var(--pink-mid); padding: 0.3rem 0.9rem; border-radius: 100px; margin-bottom: 1.8rem; }
+  .hero-title { font-family: var(--serif); font-size: clamp(3rem, 6vw, 5.5rem); line-height: 1.08; letter-spacing: -0.03em; color: var(--black); margin-bottom: 1.6rem; }
+  body.ar .hero-title { font-family: var(--arabic); letter-spacing: 0; line-height: 1.3; }
+  .hero-title em { color: var(--pink); font-style: italic; }
+  body.ar .hero-title em { font-style: normal; }
+  .hero-sub { font-size: 1.1rem; line-height: 1.7; color: var(--gray); max-width: 520px; margin-bottom: 2.8rem; font-weight: 300; }
+  .hero-actions { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+  .btn-primary { background: var(--black); color: var(--white); padding: 0.85rem 2rem; border-radius: 100px; text-decoration: none; font-size: 0.95rem; font-weight: 500; transition: background 0.2s, transform 0.15s; }
+  .btn-primary:hover { background: var(--pink); transform: translateY(-1px); }
+  .btn-ghost { color: var(--black); padding: 0.85rem 2rem; border-radius: 100px; text-decoration: none; font-size: 0.95rem; font-weight: 400; border: 1px solid rgba(0,0,0,0.18); transition: border-color 0.2s, transform 0.15s; }
+  .btn-ghost:hover { border-color: var(--pink); color: var(--pink); transform: translateY(-1px); }
+  .hero-stats { margin-top: 5rem; display: flex; gap: 3rem; }
+  .stat-num { font-family: var(--serif); font-size: 2.4rem; font-weight: 700; color: var(--black); }
+  body.ar .stat-num { font-family: var(--arabic); }
+  .stat-label { font-size: 0.82rem; color: var(--gray); margin-top: 0.2rem; }
+
+  /* SECTIONS */
+  section { padding: 6rem 4rem; }
+  .section-tag { font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--pink); font-weight: 500; margin-bottom: 1rem; }
+  .section-title { font-family: var(--serif); font-size: clamp(2rem, 3.5vw, 3rem); line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 1rem; color: var(--black); }
+  body.ar .section-title { font-family: var(--arabic); letter-spacing: 0; line-height: 1.4; }
+  .section-sub { color: var(--gray); font-size: 1rem; line-height: 1.7; max-width: 480px; font-weight: 300; }
+
+  /* SERVICES */
+  #services { background: var(--gray-light); }
+  .services-head { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3.5rem; flex-wrap: wrap; gap: 1.5rem; }
+  .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5px; background: rgba(0,0,0,0.1); border: 1.5px solid rgba(0,0,0,0.1); border-radius: 16px; overflow: hidden; }
+  .service-card { background: var(--white); padding: 2.2rem; transition: background 0.2s; }
+  .service-card:hover { background: #fff; }
+  .service-icon { width: 44px; height: 44px; background: var(--pink-light); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.4rem; }
+  .service-icon svg { width: 22px; height: 22px; stroke: var(--pink); fill: none; stroke-width: 1.8; }
+  .service-title { font-family: var(--serif); font-size: 1.25rem; font-weight: 700; margin-bottom: 0.6rem; color: var(--black); }
+  body.ar .service-title { font-family: var(--arabic); }
+  .service-desc { font-size: 0.9rem; color: var(--gray); line-height: 1.65; font-weight: 300; }
+  .services-grid { /* The parent container */
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 0; /* This removes the space between boxes */
+}
+
+.service-box { /* The individual cards */
+  margin: 0; /* This ensures the boxes touch each other */
+  border: 1px solid #eee; /* Optional: adds a thin line so you can still see where one ends and the next begins */
+}
+
+  /* PORTFOLIO */
+  #portfolio .portfolio-head { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; flex-wrap: wrap; gap: 1.5rem; }
+  .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+  .portfolio-card { border-radius: 16px; overflow: hidden; border: 1px solid rgba(0,0,0,0.08); transition: transform 0.25s, box-shadow 0.25s; }
+  .portfolio-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.08); }
+  .portfolio-thumb { height: 200px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+  .portfolio-thumb.pt1 { background: linear-gradient(135deg, #1a1a2e, #16213e); }
+  .portfolio-thumb.pt2 { background: linear-gradient(135deg, #0f3460, #e94560); }
+  .portfolio-thumb.pt3 { background: linear-gradient(135deg, #2c5f2e, #97bc62); }
+  .portfolio-thumb-label { position: absolute; bottom: 0; left: 0; right: 0; padding: 1rem 1.2rem; background: linear-gradient(to top, rgba(0,0,0,0.7), transparent); }
+  .pt-industry { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.75); font-weight: 500; }
+  .portfolio-info { background: var(--white); padding: 1.3rem 1.5rem; }
+  .portfolio-name { font-family: var(--serif); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--black); }
+  .portfolio-desc { font-size: 0.85rem; color: var(--gray); line-height: 1.5; font-weight: 300; }
+  .portfolio-tag { display: inline-block; margin-top: 0.8rem; font-size: 0.73rem; letter-spacing: 0.05em; text-transform: uppercase; background: var(--pink-light); color: var(--pink); padding: 0.25rem 0.7rem; border-radius: 100px; font-weight: 500; }
+
+  /* ABOUT */
+  #about { background: var(--black); color: var(--white); }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+  #about .section-title { color: var(--white); }
+  #about .section-tag { color: var(--pink); }
+  .about-body { font-size: 1rem; line-height: 1.8; color: rgba(249,248,246,0.7); font-weight: 300; margin-top: 1.2rem; }
+  .about-body + .about-body { margin-top: 1rem; }
+  .about-highlights { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2.5rem; }
+  .highlight-box { border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.4rem; }
+  .highlight-num { font-family: var(--serif); font-size: 2rem; font-weight: 700; color: var(--pink); }
+  .highlight-text { font-size: 0.85rem; color: rgba(249,248,246,0.6); margin-top: 0.3rem; font-weight: 300; }
+  .about-visual { position: relative; }
+  .about-card-main { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 2.5rem; backdrop-filter: blur(8px); }
+  .about-card-main .big-letter { font-family: var(--serif); font-size: 8rem; line-height: 1; font-weight: 700; }
+  .about-card-main .big-letter .lam { color: rgba(255,255,255,0.9); }
+  .about-card-main .big-letter .web { color: var(--pink-mid); font-style: italic; }
+  .about-card-main p { font-size: 0.9rem; color: rgba(255,255,255,0.5); margin-top: 1rem; font-weight: 300; line-height: 1.6; }
+  .floating-pill { position: absolute; background: var(--pink); color: #fff; font-size: 0.8rem; font-weight: 500; padding: 0.5rem 1rem; border-radius: 100px; }
+  .fp1 { top: -14px; right: 20px; }
+  .fp2 { bottom: -14px; left: 20px; background: #fff; color: var(--black); }
+  body.ar .fp1 { right: auto; left: 20px; }
+  body.ar .fp2 { left: auto; right: 20px; }
+
+  /* PRICING */
+  #pricing { background: var(--gray-light); }
+  .pricing-head { margin-bottom: 3.5rem; }
+  .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 1000px; }
+  .price-card { background: var(--white); border: 1px solid rgba(0,0,0,0.08); border-radius: 20px; padding: 2.2rem; position: relative; transition: transform 0.2s, box-shadow 0.2s; }
+  .price-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.07); }
+  .price-card.featured { background: var(--pink); border-color: transparent; color: var(--white); }
+  .price-badge { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: var(--black); color: #fff; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.3rem 1rem; border-radius: 100px; white-space: nowrap; }
+  .price-tier { font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray); font-weight: 500; margin-bottom: 0.8rem; }
+  .featured .price-tier { color: rgba(255,255,255,0.7); }
+  .price-amount { font-family: var(--serif); font-size: 3rem; font-weight: 700; line-height: 1; margin-bottom: 0.3rem; color: var(--black); }
+  body.ar .price-amount { font-family: var(--arabic); }
+  .featured .price-amount { color: #fff; }
+  .price-note { font-size: 0.82rem; color: var(--gray); margin-bottom: 2rem; font-weight: 300; }
+  .featured .price-note { color: rgba(255,255,255,0.75); }
+  .price-divider { border: none; border-top: 1px solid rgba(0,0,0,0.08); margin-bottom: 1.5rem; }
+  .featured .price-divider { border-color: rgba(255,255,255,0.2); }
+  .price-features { list-style: none; display: flex; flex-direction: column; gap: 0.8rem; }
+  .price-features li { font-size: 0.9rem; color: var(--gray); font-weight: 300; display: flex; align-items: flex-start; gap: 0.6rem; }
+  .featured .price-features li { color: rgba(255,255,255,0.85); }
+  .check-dot { width: 18px; height: 18px; min-width: 18px; background: var(--pink-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
+  .check-dot svg { width: 10px; height: 10px; stroke: var(--pink); fill: none; stroke-width: 2.5; }
+  .featured .check-dot { background: rgba(255,255,255,0.2); }
+  .featured .check-dot svg { stroke: #fff; }
+  .price-btn { display: block; text-align: center; margin-top: 2rem; padding: 0.8rem; border-radius: 100px; text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: all 0.2s; border: 1.5px solid rgba(0,0,0,0.15); color: var(--black); }
+  .price-btn:hover { border-color: var(--pink); color: var(--pink); }
+  .featured .price-btn { background: #fff; border-color: #fff; color: var(--pink); }
+  .featured .price-btn:hover { background: var(--pink-light); }
+
+  /* ADDONS */
+  .addons-section { margin-top: 3rem; background: var(--white); border: 1px solid var(--pink-mid); border-radius: 20px; padding: 2.2rem 2.5rem; }
+  .addons-header { margin-bottom: 1.8rem; }
+  .addons-title { font-family: var(--serif); font-size: 1.2rem; font-weight: 700; color: var(--pink); margin-bottom: 0.4rem; }
+  body.ar .addons-title { font-family: var(--arabic); }
+  .addons-sub { font-size: 0.88rem; color: var(--gray); font-weight: 300; }
+  .addons-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+  .addon-pill { display: flex; align-items: flex-start; gap: 0.9rem; background: var(--pink-light); border-radius: 12px; padding: 1rem 1.1rem; }
+  .addon-pill-icon { width: 36px; height: 36px; min-width: 36px; background: #fff; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--pink); }
+  .addon-pill-icon svg { width: 18px; height: 18px; }
+  .addon-pill-name { font-size: 0.88rem; font-weight: 500; color: var(--black); margin-bottom: 0.2rem; }
+  .addon-pill-desc { font-size: 0.78rem; color: var(--gray); font-weight: 300; }
+
+  /* CONTACT */
+  .contact-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 5rem; align-items: start; }
+  .contact-items { margin-top: 2.5rem; display: flex; flex-direction: column; gap: 1.4rem; }
+  .contact-item { display: flex; align-items: flex-start; gap: 1rem; }
+  .contact-item-icon { width: 40px; height: 40px; min-width: 40px; background: var(--pink-light); border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+  .contact-item-icon svg { width: 18px; height: 18px; stroke: var(--pink); fill: none; stroke-width: 1.8; }
+  .contact-item-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gray); font-weight: 500; margin-bottom: 0.2rem; }
+  .contact-item-val { font-size: 0.95rem; color: var(--black); }
+  form { display: flex; flex-direction: column; gap: 1.2rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  label { display: block; font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gray); font-weight: 500; margin-bottom: 0.45rem; }
+  input[type="text"], input[type="email"], textarea, select { width: 100%; padding: 0.8rem 1rem; border: 1px solid rgba(0,0,0,0.12); border-radius: 10px; font-family: var(--sans); font-size: 0.92rem; color: var(--black); background: var(--white); outline: none; transition: border-color 0.2s; appearance: none; }
+  body.ar input, body.ar textarea, body.ar select { font-family: var(--arabic); text-align: right; }
+  input:focus, textarea:focus, select:focus { border-color: var(--pink); }
+  textarea { resize: vertical; min-height: 120px; }
+  .form-submit { background: var(--pink); color: #fff; padding: 0.9rem 2.5rem; border: none; border-radius: 100px; font-family: var(--sans); font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: background 0.2s; align-self: flex-start; }
+  body.ar .form-submit { font-family: var(--arabic); }
+  .form-submit:hover { background: var(--pink-dark); }
+
+  /* FOOTER */
+  footer { background: var(--black); color: rgba(255,255,255,0.5); padding: 2.5rem 4rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+  footer .logo { font-size: 1.3rem; }
+  footer p { font-size: 0.82rem; font-weight: 300; }
+  footer .logo span.lam { color: #fff; }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+  .hero-inner > * { opacity: 0; animation: fadeUp 0.7s ease forwards; }
+  .hero-tag { animation-delay: 0.1s; } .hero-title { animation-delay: 0.25s; }
+  .hero-sub { animation-delay: 0.4s; } .hero-actions { animation-delay: 0.55s; } .hero-stats { animation-delay: 0.7s; }
+
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; } section { padding: 4rem 1.5rem; } #hero { padding: 7rem 1.5rem 3rem; }
+    .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; } .about-visual { display: none; }
+    footer { padding: 2rem 1.5rem; flex-direction: column; text-align: center; }
+    .nav-links { display: none; } .form-row { grid-template-columns: 1fr; } .hero-stats { gap: 2rem; flex-wrap: wrap; }
+    .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 1.5px; background: rgba(0,0,0,0.1); border: 1.5px solid rgba(0,0,0,0.1); border-radius: 16px; overflow: hidden; }
+    footer .logo span.lam { color: #fff; }  
+  }
+ .portfolio-card {
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.08);
+  transition: transform 0.25s, box-shadow 0.25s;
+  display: flex;
+  flex-direction: column;
+  max-width: 350px;
+  background: var(--white);
+}
+.portfolio-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.10);
+}
+.portfolio-thumb {
+  width: 100%;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+.portfolio-logo-img {
+  width: 70%;
+  max-height: 130px;
+  object-fit: contain;
+}
+.form-addons-group {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.addons-group-label {
+  display: block;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--black);
+  margin-bottom: 0.8rem;
+}
+
+.form-addons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0.8rem;
+}
+
+.form-addon-check {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: #fff;
+  border: 1px solid var(--pink-mid);
+  border-radius: 10px;
+  padding: 0.8rem 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Hover state */
+.form-addon-check:hover {
+  background: var(--pink-light);
+  border-color: var(--pink);
+}
+
+/* Customize checkbox color */
+.form-addon-check input[type="checkbox"] {
+  accent-color: var(--pink);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.addon-check-text {
+  font-size: 0.66rem;
+  color: var(--black); 
+}
+
+</style>
+</head>
+<body>
+<title>Lamweb | Web Design & Development in Saudi Arabia</title>
+<meta name="description" content="Professional bilingual web development services in Jeddah. Specializing in corporate and multi-sector websites.">
+<nav>
+  <a href="#hero" class="logo"><span class="lam">Lam</span><span class="web">web</span></a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#services"><span class="en">Services</span><span class="ar-t">خدماتي</span></a></li>
+      <li><a href="#portfolio"><span class="en">Work</span><span class="ar-t">أعمالي</span></a></li>
+      <li><a href="#about"><span class="en">About</span><span class="ar-t">من أنا</span></a></li>
+      <li><a href="#pricing"><span class="en">Pricing</span><span class="ar-t">الأسعار</span></a></li>
+      <li><a href="#contact" class="nav-cta"><span class="en">Get in touch</span><span class="ar-t">تواصل معي</span></a></li>
+    </ul>
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" id="btn-ar" onclick="setLang('ar')">عربي</button>
+    </div>
+  </div>
+</nav>
+
+<section id="hero">
+  <div class="hero-bg-circle c1"></div>
+  <div class="hero-bg-circle c2"></div>
+  <div class="hero-inner">
+    <span class="hero-tag"><span class="en">Web Development Studio</span><span class="ar-t">استوديو تطوير المواقع</span></span>
+    <h1 class="hero-title">
+      <span class="en">Websites that<br/>make your business<br/><em>unforgettable.</em></span>
+      <span class="ar-t">اصمم لك<br/>موقع يجعل علامتك التجارية<br/><em>لا تُنسى.</em></span>
+    </h1>
+    <p class="hero-sub">
+      <span class="en">Lamweb crafts high quality, bilingual websites for businesses that want to stand out in English and Arabic, built to perform.</span>
+      <span class="ar-t">لام ويب لتصميم مواقع إلكترونية احترافية تدعم واجهتين (عربية/إنجليزية) بطلاقة، مصممة للشركات الطموحة ومبنية للأداء العالي</span>
+    </p>
+    <div class="hero-actions">
+      <a href="#portfolio" class="btn-primary"><span class="en">See my work</span><span class="ar-t">أعمالي</span></a>
+      <a href="#contact" class="btn-ghost"><span class="en">Start a project</span><span class="ar-t">ابدأ مشروعك</span></a>
+    </div>
+</section>
+
+<section id="services">
+  <div class="services-head">
+    <div>
+      <div class="section-tag"><span class="en">What I do</span><span class="ar-t">ماذا أقدم</span></div>
+      <h2 class="section-title"><span class="en">Services built for<br/>serious businesses.</span><span class="ar-t">خدماتي<br/></span></h2>
+    </div>
+    <p class="section-sub"><span class="en">From concept to launch, I handle everything so you can focus on running your business.</span><span class="ar-t">من الفكرة حتى الإطلاق، أتولى كل شيء حتى تتفرّغ لإدارة عملك.</span></p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg></div>
+      <div class="service-title"><span class="en">Corporate Websites</span><span class="ar-t">مواقع الشركات</span></div>
+      <p class="service-desc"><span class="en">Professional multi page websites for companies that need to make a strong first impression online.</span><span class="ar-t">مواقع متعددة الصفحات للشركات التي تريد انطباعاً أولياً قوياً على الإنترنت.</span></p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18"/><path d="M3 12h18"/></svg></div>
+      <div class="service-title"><span class="en">Bilingual Development</span><span class="ar-t">التطوير باللغة العربية و الانجليزية</span></div>
+      <p class="service-desc"><span class="en">Websites in both English and Arabic with proper RTL layout, native language switching, and culturally adapted design.</span><span class="ar-t">مواقع بالعربية والإنجليزية مع دعم كامل للكتابة من اليمين لليسار وتصميم يناسب الثقافتين.</span></p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+      <div class="service-title"><span class="en">Multi Sector Builds</span><span class="ar-t">مواقع متعددة القطاعات</span></div>
+      <p class="service-desc"><span class="en">Experience building sites across different industries each with its own tone, structure, and design language.</span><span class="ar-t">خبرة في بناء مواقع لقطاعات متعددة، لكل قطاع أسلوبه وهيكله وتصميمه الخاص.</span></p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+      <div class="service-title"><span class="en">Content & Copywriting</span><span class="ar-t">المحتوى والكتابة</span></div>
+      <p class="service-desc"><span class="en">I help write or translate your content for both languages, keeping your brand voice consistent and professional.</span><span class="ar-t">أساعدك في كتابة وترجمة محتواك باللغتين مع الحفاظ على صوت علامتك التجارية</span></p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+      <div class="service-title"><span class="en">Performance & SEO</span><span class="ar-t">الأداء وتحسين محركات البحث</span></div>
+      <p class="service-desc"><span class="en">Every site is optimized for speed, search engines, and mobile, because a slow website loses customers.</span><span class="ar-t">نحرص في كل موقع على تحسين السرعة، ومحركات البحث، والتوافق مع الجوال، لأن الموقع البطيء يخسر العملاء</span></p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
+      <div class="service-title"><span class="en">Ongoing Maintenance</span><span class="ar-t">الصيانة المستمرة</span></div>
+      <p class="service-desc"><span class="en">Monthly support packages to keep your website updated and running smoothly long after launch.</span><span class="ar-t">باقات دعم شهرية تبقي موقعك محدّثاً وسلساً بعد الإطلاق.</span></p>
+    </div>
+  </div>
+</section>
+
+<section id="portfolio">
+  <div class="portfolio-head">
+    <div>
+      <div class="section-tag"><span class="en">My work</span><span class="ar-t">أعمالي</span></div>
+      <h2 class="section-title"><span class="en">Recent projects.</span><span class="ar-t">مشاريع حديثة.</span></h2>
+    </div>
+    <p class="section-sub"><span class="en">A look at some of the websites I've built for my clients.</span><span class="ar-t">نظرة على بعض المواقع التي بنيتها لعملائي</span></p>
+  </div>
+ <div class="portfolio-card">
+  <div class="portfolio-thumb pt-white">
+    <img src="images/bg-masthead.jpg" alt="Marib Holding" class="portfolio-logo-img">
+    <div class="portfolio-thumb-label">
+      <div class="pt-industry">Oil & Real Estate</div>
+    </div>
+  </div>
+  <div class="portfolio-info">
+    <div class="portfolio-name">Maribholding.com</div>
+    <p class="portfolio-desc">
+      <span class="en">A dual sector corporate website available in English and Arabic with full RTL support.</span>
+      <span class="ar-t">موقع شركة ثنائي القطاع متاح بالإنجليزية والعربية مع دعم كامل للاتجاه</span>
+    </p>
+    <span class="portfolio-tag">
+      <span class="en">Bilingual</span>
+      <span class="ar-t">ثنائي اللغة</span>
+    </span>
+  </div>
+</div>
+  </div>
+</div>
+</section>
+
+<section id="about">
+  <div class="about-grid">
+    <div>
+      <div class="section-tag"><span class="en">About Lamweb</span><span class="ar-t">عن لام ويب</span></div>
+      <h2 class="section-title"><span class="en">Built by someone who understands your market.</span><span class="ar-t">صُنع بواسطة شخص يفهم سوقك.</span></h2>
+      <p class="about-body"><span class="en">Lamweb is an independent web development studio run by me, focused on building high quality, bilingual digital experiences for businesses in the Arab world and beyond.</span><span class="ar-t">لام ويب استوديو مستقل لتطوير المواقع أديره بنفسي. متخصص في بناء تجارب رقمية عالية الجودة وثنائية اللغة للشركات في العالم العربي وخارجه</span></p>
+      <p class="about-body"><span class="en">Every website I build is custom made to reflect your brand, speak to your audience, and work on any device in both Arabic and English.</span><span class="ar-t">كل موقع أبنيه مصمم خصيصاً ليعكس علامتك التجارية ويخاطب جمهورك ويعمل على أي جهاز بالعربية والإنجليزية</span></p>
+      <div class="about-highlights">
+        <div class="highlight-box"><div class="highlight-num">2</div><div class="highlight-text"><span class="en">Languages</span><span class="ar-t">لغتان</span></div></div>
+        <div class="highlight-box"><div class="highlight-num">RTL</div><div class="highlight-text"><span class="en">Native Arabic layout support</span><span class="ar-t">دعم كامل للعربية RTL</span></div></div>
+        <div class="highlight-box"><div class="highlight-num">100%</div><div class="highlight-text"><span class="en">Custom built for you</span><span class="ar-t">مصمم خصيصاً لك</span></div></div>
+        <div class="highlight-box"><div class="highlight-num"><span class="en">Fast</span><span class="ar-t">سريع</span></div><div class="highlight-text"><span class="en">Delivery within agreed timelines</span><span class="ar-t">التسليم في المواعيد المتفق عليها</span></div></div>
+      </div>
+    </div>
+    <div class="about-visual">
+      <div class="about-card-main">
+        <div class="big-letter"><span class="lam">Lam</span><span class="web">web</span></div>
+        <p><span class="en">Web development with purpose. I build websites that work for businesses in both Arabic and English.</span><span class="ar-t">تطوير مواقع بهدف. أبني مواقع تخدم الشركات بالعربية والإنجليزية.</span></p>
+      </div>
+      <div class="floating-pill fp1">✦ <span class="en">Arabic & English</span><span class="ar-t">عربي وإنجليزي</span></div>
+      <div class="floating-pill fp2"><span class="en">Est. 2026</span><span class="ar-t">تأسست 2026</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="pricing-head">
+    <div class="section-tag"><span class="en">Pricing</span><span class="ar-t">الأسعار</span></div>
+    <h2 class="section-title"><span class="en">Clear pricing, no surprises.</span><span class="ar-t">أسعار واضحة، بلا مفاجآت.</span></h2>
+    <p class="section-sub" style="margin-top:0.5rem"><span class="en">Every project starts with a base package. Contact me for a quote tailored to your needs.</span><span class="ar-t">كل مشروع يبدأ بباقة أساسية. تواصل معي للحصول على عرض سعر يناسب احتياجاتك.</span></p>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-tier"><span class="en">Small Local Business</span><span class="ar-t">الأعمال المحلية الصغيرة</span></div>
+      <div class="price-amount"><span class="en">Custom</span><span class="ar-t">طلب عرض سعر</span></div>
+      <div class="price-note"><span class="en">Great for shops, clinics & local services</span><span class="ar-t">مثالي للمحلات والعيادات والخدمات المحلية</span></div>
+      <hr class="price-divider"/>
+      <ul class="price-features">
+        <li><span class="check-dot"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></span><span class="en">Up to 5 pages</span><span class="ar-t">حتى 5 صفحات</span></li>
+        <li><span class="check-dot"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></span><span class="en">Mobile responsive</span><span class="ar-t">متجاوب مع الجوال</span></li>
+        <li><span class="check-dot"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></span><span class="en">Contact form</span><span class="ar-t">نموذج تواصل</span></li>
+        <li><span class="check-dot"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></span><span class="en">2 revision rounds</span><span class="ar-t">جولتان للمراجعة</span></li>
+      </ul>
+      <a href="#contact" class="price-btn"><span class="en">Start a project</span><span class="ar-t">ابدأ مشروعك</span></a>
+    </div>
+    <div class="price-card featured">
+      <div class="price-tier"><span class="en">Bilingual Corporate</span><span class="ar-t">شركات ثنائية اللغة</span></div>
+      <div class="price-amount"><span class="en">Custom</span><span class="ar-t">اطلب عرض سعر</span></div>
+      <div class="price-note"><span class="en">For companies that need English & Arabic</span><span class="ar-t">للشركات التي تحتاج عربياً وإنجليزياً</span></div>
+      <hr class="price-divider"/>
+      <ul class="price-features">
+        <li><span class="check-dot"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></span><span class="en">Up to 10 pages</span><span class="ar-t">حتى 10 صفحات</span></li>
+        <li><span class="check-dot"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></span><span class="en">Full RTL Arabic layout</span><span class="ar-t">تخطيط عربي RTL كامل</span></li>
+        <li><span class="check-dot"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></span><span class="en">Mobile responsive</span><span class="ar-t">متجاوب مع الجوال</span></li>
+        <li><span class="check-dot"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></span><span class="en">4 revision rounds</span><span class="ar-t">أربع جولات للمراجعة</span></li>
+      </ul>
+      <a href="#contact" class="price-btn"><span class="en">Start a project</span><span class="ar-t">ابدأ مشروعك</span></a>
+    </div>
+    <div class="price-card">
+      <div class="price-tier"><span class="en">Large Scale Projects</span><span class="ar-t">المشاريع الكبيرة</span></div>
+      <div class="price-amount"><span class="en">Custom</span><span class="ar-t">اطلب عرض سعر</span></div>
+      <div class="price-note"><span class="en">For businesses with complex needs</span><span class="ar-t">للشركات ذات المتطلبات المعقدة</span></div>
+      <hr class="price-divider"/>
+      <ul class="price-features">
+        <li><span class="check-dot"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></span><span class="en">Unlimited pages</span><span class="ar-t">صفحات غير محدودة</span></li>
+        <li><span class="check-dot"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></span><span class="en">Full bilingual + RTL</span><span class="ar-t">ثنائي اللغة + RTL كامل</span></li>
+        <li><span class="check-dot"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></span><span class="en">Custom design & animations</span><span class="ar-t">تصميم وحركات مخصصة</span></li>
+        <li><span class="check-dot"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></span><span class="en">Priority support</span><span class="ar-t">دعم ذو أولوية</span></li>
+      </ul>
+      <a href="#contact" class="price-btn"><span class="en">Start a project</span><span class="ar-t">ابدأ مشروعك</span></a>
+    </div>
+  </div>
+  <div class="addons-section">
+    <div class="addons-header">
+      <div class="addons-title">+ <span class="en">Available Add-ons</span><span class="ar-t">الإضافات المتاحة</span></div>
+      <p class="addons-sub"><span class="en">Enhance any package with extras. Priced separately based on your project.</span><span class="ar-t">حسّن أي باقة بإضافات اختيارية. تُسعَّر بشكل منفصل حسب مشروعك.</span></p>
+    </div>
+    <div class="addons-grid">
+      <div class="addon-pill">
+        <div class="addon-pill-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18"/><path d="M3 12h18"/></svg></div>
+        <div><div class="addon-pill-name"><span class="en">Basic SEO</span><span class="ar-t">تحسين محركات البحث</span></div><div class="addon-pill-desc"><span class="en">Help your site get found on Google</span><span class="ar-t">اجعل موقعك يظهر في جوجل</span></div></div>
+      </div>
+      <div class="addon-pill">
+        <div class="addon-pill-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></div>
+        <div><div class="addon-pill-name"><span class="en">Add Language</span><span class="ar-t">اضافة لغة</span></div><div class="addon-pill-desc"><span class="en">Add a language in EN or AR</span><span class="ar-t">اضافة لغة لموقعك سواء العربية او الانجليزية</span></div></div>
+      </div>
+      <div class="addon-pill">
+        <div class="addon-pill-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+        <div><div class="addon-pill-name"><span class="en">Domain & Hosting Setup</span><span class="ar-t">إعداد النطاق والاستضافة</span></div><div class="addon-pill-desc"><span class="en">I'll handle the technical setup for you</span><span class="ar-t">أتولى الإعداد التقني بالكامل نيابة عنك</span></div></div>
+      </div>
+      <div class="addon-pill">
+        <div class="addon-pill-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+        <div><div class="addon-pill-name"><span class="en">Property Photo Gallery</span><span class="ar-t">معرض صور </span></div><div class="addon-pill-desc"><span class="en">Showcase listings with a visual gallery</span><span class="ar-t">اضافة معرض صور المشروع</span></div></div>
+      </div>
+       <div class="addon-pill">
+    <div class="addon-pill-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
+    <div> <div class="addon-pill-name"><span class="en">Content & Copywriting</span><span class="ar-t">كتابة المحتوى والترجمة</span></div>
+      <div class="addon-pill-desc"><span class="en">Crafting professional, localized text for your pages from scratch in both English and Arabic.</span><span class="ar-t">نساعدك في كتابة وترجمة محتواك باللغتين مع الحفاظ على هوية وصوت علامتك التجارية.</span></div>
+    </div> 
+  </div>
+
+</div>
+  </section>
+
+
+<section id="contact">
+  <div class="contact-grid">
+    <div class="contact-info">
+      <div class="section-tag"><span class="en">Contact</span><span class="ar-t">تواصل</span></div>
+      <p class="section-sub"><span class="en">Tell me about your project and I'll get back to you within 48 hours.</span><span class="ar-t">أخبرني عن مشروعك وسأرد عليك خلال 48 ساعة.</span></p>
+      <div class="contact-items">
+        <div class="contact-item">
+          <div class="contact-item-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+          <div><div class="contact-item-label"><span class="en">Email</span><span class="ar-t">البريد الإلكتروني</span></div><div class="contact-item-val">contact@lamweb.dev</div></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <div><div class="contact-item-label"><span class="en">Based in</span><span class="ar-t">الموقع</span></div><div class="contact-item-val"><span class="en">Saudi Arabia · Working globally</span><span class="ar-t">المملكة العربية السعودية · أعمل عالمياً</span></div></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.18 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.56a16 16 0 0 0 6 6l.94-.94a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+          <div><div class="contact-item-label">WhatsApp</div><div class="contact-item-val"><span class="en">0509824725</span><span class="ar-t">0509824725</span></div></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      
+      <form action="https://formspree.io/f/xkoyljjv" method="POST" onsubmit="handleSubmit(event)"></form>
+      <form onsubmit="handleSubmit(event)">
+        <div class="form-row">
+          <div><label><span class="en">Name</span><span class="ar-t">الاسم</span></label><input type="text" id="fname" placeholder="Your name" required /></div>
+          <div><label><span class="en">Email</span><span class="ar-t">البريد الإلكتروني</span></label><input type="email" id="femail" placeholder="you@company.com" required/></div>
+        </div>
+        <div>
+       <label>
+        <label>
+ <label>
+ <label>
+    <label><span class="en">Service needed</span><span class="ar-t">الخدمة المطلوبة</span></label>
+<select id="fservice" required>
+  <option value="">Select a service...</option>
+  <option value="corporate">Corporate Website</option>
+  <option value="bilingual">Bilingual Website</option>
+  <option value="large">Large-Scale Project</option>
+  <option value="redesign">Website Redesign</option>
+  <option value="maintenance">Maintenance</option>
+  <option value="other">Other</option>
+</select>
+<label>
+
+
+</div>
+        <div><label><span class="en">Tell me about your project</span><span class="ar-t">أخبرني عن مشروعك</span></label><textarea id="fmsg" placeholder="Describe what you're looking for..." required></textarea></div>
+        <button type="submit" class="form-submit"><span class="en">Send message →</span><span class="ar-t">إرسال الرسالة ←</span></button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <a href="#hero" class="logo"><span class="lam">Lam</span><span class="web">web</span></a>
+  <p><span class="en">© 2026 Lamweb. All rights reserved.</span><span class="ar-t">© 2026 لامويب. جميع الحقوق محفوظة.</span></p>
+  <p><span class="en">Built with care in Saudi Arabia 🇸🇦</span><span class="ar-t">صُنع باهتمام في المملكة العربية السعودية 🇸🇦</span></p>
+</footer>
+
+<script>
+  function getOpts(lang) {
+  return lang === 'ar' ? {
+    '': 'اختر خدمة...',
+    'corporate': 'موقع شركة',
+    'bilingual': 'موقع ثنائي اللغة',
+    'large': 'مشروع كبير',
+    'redesign': 'إعادة تصميم',
+    'maintenance': 'صيانة',
+    'other': 'أخرى'
+  } : {
+    '': 'Select a service...',
+    'corporate': 'Corporate Website',
+    'bilingual': 'Bilingual Website',
+    'large': 'Large-Scale Project',
+    'redesign': 'Website Redesign',
+    'maintenance': 'Maintenance',
+    'other': 'Other'
+  };
+}
+
+function updateSelect(lang) {
+  const opts = getOpts(lang);
+  document.getElementById('fservice').querySelectorAll('option').forEach(o => {
+    o.textContent = opts[o.value];
+  });
+}
+
+function setLang(lang) {
+  const body = document.body;
+  const html = document.documentElement;
+  if (lang === 'ar') {
+    body.classList.add('ar');
+    html.setAttribute('lang', 'ar');
+    html.setAttribute('dir', 'rtl');
+    document.getElementById('btn-ar').classList.add('active');
+    document.getElementById('btn-en').classList.remove('active');
+    document.getElementById('fname').placeholder = 'اسمك';
+    document.getElementById('fmsg').placeholder = 'صف ما تبحث عنه...';
+  } else {
+    body.classList.remove('ar');
+    html.setAttribute('lang', 'en');
+    html.setAttribute('dir', 'ltr');
+    document.getElementById('btn-en').classList.add('active');
+    document.getElementById('btn-ar').classList.remove('active');
+    document.getElementById('fname').placeholder = 'Your name';
+    document.getElementById('fmsg').placeholder = "Describe what you're looking for...";
+  }
+  updateSelect(lang);
+}
+</script>
+</body>
+</html>
