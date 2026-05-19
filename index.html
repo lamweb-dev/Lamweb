@@ -531,34 +531,42 @@
     </div>
     <div>
       
-      <form action="https://formspree.io/f/xkoyljjv" method="POST" onsubmit="handleSubmit(event)"></form>
-      <form onsubmit="handleSubmit(event)">
+    <form action="https://formspree.io/f/xkoyljjv" method="POST">
+        
         <div class="form-row">
-          <div><label><span class="en">Name</span><span class="ar-t">الاسم</span></label><input type="text" id="fname" placeholder="Your name" required /></div>
-          <div><label><span class="en">Email</span><span class="ar-t">البريد الإلكتروني</span></label><input type="email" id="femail" placeholder="you@company.com" required/></div>
+          <div>
+            <label><span class="en">Name</span><span class="ar-t">الاسم</span></label>
+            <input type="text" id="fname" name="name" placeholder="Your name" required />
+          </div>
+          <div>
+            <label><span class="en">Email</span><span class="ar-t">البريد الإلكتروني</span></label>
+            <input type="email" id="femail" name="email" placeholder="you@company.com" required/>
+          </div>
         </div>
-        <div>
-       <label>
-        <label>
- <label>
- <label>
-    <label><span class="en">Service needed</span><span class="ar-t">الخدمة المطلوبة</span></label>
-<select id="fservice" required>
-  <option value="">Select a service...</option>
-  <option value="corporate">Corporate Website</option>
-  <option value="bilingual">Bilingual Website</option>
-  <option value="large">Large-Scale Project</option>
-  <option value="redesign">Website Redesign</option>
-  <option value="maintenance">Maintenance</option>
-  <option value="other">Other</option>
-</select>
-<label>
+<div>
+          <label><span class="en">Service needed</span><span class="ar-t">الخدمة المطلوبة</span></label>
+          <select id="fservice" name="service" required>
+            <option value="">Select a service...</option>
+            <option value="corporate">Corporate Website</option>
+            <option value="bilingual">Bilingual Website</option>
+            <option value="large">Large-Scale Project</option>
+            <option value="redesign">Website Redesign</option>
+            <option value="maintenance">Maintenance</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+<div>
+          <label><span class="en">Tell me about your project</span><span class="ar-t">أخبرني عن مشروعك</span></label>
+          <textarea id="fmsg" name="message" placeholder="Describe what you're looking for..." required></textarea>
+        </div>
+        
+        <button type="submit" class="form-submit">
+          <span class="en">Send message →</span>
+          <span class="ar-t">إرسال الرسالة ←</span>
+        </button>
 
-
-</div>
-        <div><label><span class="en">Tell me about your project</span><span class="ar-t">أخبرني عن مشروعك</span></label><textarea id="fmsg" placeholder="Describe what you're looking for..." required></textarea></div>
-        <button type="submit" class="form-submit"><span class="en">Send message →</span><span class="ar-t">إرسال الرسالة ←</span></button>
       </form>
+      
     </div>
   </div>
 </section>
